@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
+    <!-- Chart.js para o Gráfico de Pizza/Donut -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -87,7 +88,6 @@
         
         /* STATUS PILL */
         .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
-        .status-off { background: rgba(255,255,255,0.05); color: var(--text-muted); }
         .status-ready { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
         .status-running { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); animation: pulse 1.5s infinite; }
         
@@ -117,6 +117,7 @@
 </head>
 <body>
 
+    <!-- MENU LATERAL -->
     <div class="sidebar">
         <div>
             <div class="logo">VÉRTICE<span> 3</span></div>
@@ -133,6 +134,7 @@
         </div>
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-content">
         <header class="header-dash">
             <div>
@@ -142,6 +144,7 @@
             <button class="btn-trigger" id="btn-iniciar" onclick="dispararWorkflow()">Iniciar Workflow Inteligente</button>
         </header>
 
+        <!-- GRID SUPERIOR: GESTÃO DE AGENTES E TERMINAL -->
         <div class="grid-layout">
             <div class="panel">
                 <h3>Agentes Disponíveis na Malha</h3>
@@ -180,6 +183,7 @@
             </div>
         </div>
 
+        <!-- GRID INFERIOR: GRÁFICO DE ESFORÇO E SUCESSOS -->
         <div class="bottom-grid">
             <div class="panel">
                 <h3>Distribuição de Esforço dos Agentes</h3>
@@ -191,7 +195,7 @@
             <div class="panel">
                 <h3>Histórico Prático de Entregas Recentes</h3>
                 <ul class="tasks-list" id="lista-entregas">
-                    <li class="task-item" style="color: var(--text-muted); italic">Nenhum workflow rodou na sessão atual.</li>
+                    <li class="task-item" style="color: var(--text-muted); font-style: italic;">Nenhum workflow rodou na sessão atual.</li>
                 </ul>
             </div>
         </div>
@@ -205,7 +209,7 @@
             data: {
                 labels: ['Comercial', 'Analista', 'Copywriter'],
                 datasets: [{
-                    data: [33, 33, 33], // Começa equilibrado
+                    data: [33, 33, 33],
                     backgroundColor: ['#38bdf8', '#10b981', '#a855f7'],
                     borderWidth: 0
                 }]
@@ -219,11 +223,11 @@
             }
         });
 
-        // Lógica de Simulação do Workflow de Agentes Autónomos
-        function log NoTerminal(texto, cor = "#a7f3d0") {
+        // CORREÇÃO AQUI: Nome unificado sem espaços
+        function logNoTerminal(texto, cor = "#a7f3d0") {
             const terminal = document.getElementById('terminal-logs');
             terminal.innerHTML += `<span style="color: ${cor}">${texto}</span><br>`;
-            terminal.scrollTop = terminal.scrollHeight; // Auto-scroll para baixo
+            terminal.scrollTop = terminal.scrollHeight;
         }
 
         function dispararWorkflow() {
@@ -231,16 +235,13 @@
             const term = document.getElementById('terminal-logs');
             const entregas = document.getElementById('lista-entregas');
             
-            // Bloqueia o botão enquanto roda
             btn.disabled = true;
-            term.innerHTML = ""; // Limpa logs anteriores
-            entregas.innerHTML = ""; // Limpa entregas antigas
+            term.innerHTML = ""; 
+            entregas.innerHTML = ""; 
 
-            // Alterar Estados visuais dos pills para "Rodando"
             document.getElementById('status-comercial').className = "status-pill status-running";
             document.getElementById('status-comercial').innerText = "Processando";
 
-            // PASSO 1: AGENTE COMERCIAL AGINDO
             logNoTerminal("[AGENTE COMERCIAL] Ligando motores de busca web...", "#38bdf8");
             
             setTimeout(() => {
@@ -250,13 +251,11 @@
                 setTimeout(() => {
                     logNoTerminal("[AGENTE COMERCIAL] Sucesso! Lead 'Tech-Solutions Global' selecionada para ataque comercial.", "#10b981");
                     
-                    // Atualiza Estado do Comercial e Liga o Analista
                     document.getElementById('status-comercial').className = "status-pill status-ready";
                     document.getElementById('status-comercial').innerText = "Concluído";
                     document.getElementById('status-analista').className = "status-pill status-running";
                     document.getElementById('status-analista').innerText = "Processando";
 
-                    // PASSO 2: AGENTE ANALISTA ENTRA EM AÇÃO
                     logNoTerminal("[AGENTE ANALISTA] Intercetando base de dados públicas e relatórios anexos da Tech-Solutions...", "#10b981");
                     
                     setTimeout(() => {
@@ -265,13 +264,11 @@
                         logNoTerminal("[AGENTE ANALISTA] Dados empacotados e enviados para o pipeline de geração de propostas.", "#10b981");
 
                         setTimeout(() => {
-                            // Atualiza Estado do Analista e Liga o Copywriter
                             document.getElementById('status-analista').className = "status-pill status-ready";
                             document.getElementById('status-analista').innerText = "Concluído";
                             document.getElementById('status-copy').className = "status-pill status-running";
                             document.getElementById('status-copy').innerText = "Processando";
 
-                            // PASSO 3: AGENTE COPYWRITER ENTRA EM AÇÃO
                             logNoTerminal("[AGENTE COPYWRITER] Recebendo briefings e métricas do Agente Analista...", "#a855f7");
                             
                             setTimeout(() => {
@@ -280,22 +277,19 @@
                                 logNoTerminal("[AGENTE COPYWRITER] [ENVIO] E-mail enviado com sucesso para: diretor@techsolutions.com.", "#10b981");
 
                                 setTimeout(() => {
-                                    // Finaliza todos os estados
                                     document.getElementById('status-copy').className = "status-pill status-ready";
                                     document.getElementById('status-copy').innerText = "Concluído";
                                     btn.disabled = false;
 
                                     logNoTerminal("<br><b>[WORKFLOW CONCLUÍDO COM SUCESSO COGNITIVO]</b>", "#fff");
                                     
-                                    // Injeta as entregas reais na lista da tela
                                     entregas.innerHTML = `
                                         <li class="task-item">Prospecção 'Tech-Solutions' concluída <span>SUCESSO</span></li>
                                         <li class="task-item">Auditoria de quebra de estoque anexada <span>EFETUADO</span></li>
                                         <li class="task-item">E-mail de abordagem outbound disparado <span>ENVIADO</span></li>
                                     `;
 
-                                    // Modifica o esforço do gráfico de pizza baseado no processamento real
-                                    window.meuGraficoPizza.data.datasets[0].data = [25, 45, 30]; // Analista trabalhou mais!
+                                    window.meuGraficoPizza.data.datasets[0].data = [25, 45, 30]; 
                                     window.meuGraficoPizza.update();
 
                                 }, 1200);
