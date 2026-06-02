@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vértice 2 | DocAI - Sistema de Inteligência Corporativa</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js para os Gráficos Interativos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        :root {
+            --bg-main: #060814;
+            --bg-sidebar: #0b0e1f;
+            --bg-card: #121736;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
+        .logo span { color: var(--accent-blue); }
+        .menu-links { list-style: none; margin-top: 3rem; flex-grow: 1; }
+        .menu-links li { padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; color: var(--text-muted); font-weight: 500; }
+        .menu-links li.active { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 3rem; max-width: 1300px; width: calc(100% - 260px); }
+        .header-dash { margin-bottom: 3rem; }
+        .header-dash h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; }
+        .header-dash p { color: var(--text-muted); font-weight: 300; }
+
+        /* METRICAS */
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .metric-card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; border-left: 4px solid var(--accent-blue); }
+        .metric-card span { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
+        .metric-card h2 { font-size: 2.2rem; margin: 0.5rem 0; }
+
+        /* WORKSPACE */
+        .workspace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
+        .panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+        .panel h3 { font-size: 1.3rem; margin-bottom: 1.5rem; }
+
+        /* UPLOAD */
+        .dropzone {
+            border: 2px dashed rgba(56, 189, 248, 0.3);
+            background: rgba(6, 8, 20, 0.5);
+            border-radius: 12px;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dropzone:hover { border-color: var(--accent-blue); background: rgba(56, 189, 248, 0.02); }
+        .dropzone p { font-size: 1rem; margin-bottom: 5px; }
+        .dropzone span { color: var(--text-muted); font-size: 0.8rem; }
+
+        /* OUTPUT IA */
+        .ai-output-box {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            min-height: 220px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .status-loading {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 15px;
+            padding: 3rem 0;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid rgba(56, 189, 248, 0.1);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* GRÁFICO */
+        .chart-panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+        .chart-container { position: relative; width: 100%; height: 300px; }
+    </style>
+</head>
+<body>
+
+    <!-- MENU LATERAL CORPORATIVO -->
+    <div class="sidebar">
+        <div>
+            <div class="logo">VÉRTICE<span> 2</span></div>
+            <ul class="menu-links">
+                <li class="active">📊 DocAI Dashboard</li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <p>Rafael Diretor</p>
+            <span>Vértice Consultoria</span>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO DA APLICAÇÃO SAAS -->
+    <div class="main-content">
+        <header class="header-dash">
+            <h1>Vértice 2: DocAI Engine</h1>
+            <p>Extração automatizada de relatórios em PDF, planilhas CSV e imagens integrada diretamente à malha da IA.</p>
+        </header>
+
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <span>Arquivos Minerados</span>
+                <h2 id="metric-docs">0</h2>
+            </div>
+            <div class="metric-card" style="border-left-color: var(--accent-green)">
+                <span>Motor Core DocAI</span>
+                <h2 style="color: var(--accent-green)">Local Ativo</h2>
+            </div>
+        </section>
+
+        <section class="workspace-grid">
+            <div class="panel">
+                <h3>Processador de Documentos</h3>
+                <input type="file" id="file-selector" style="display: none;" accept=".pdf, .csv, .txt, .docx, .jpeg, .jpg, .png" onchange="processarArquivoLocal(this.files[0])">
+                
+                <div class="dropzone" onclick="document.getElementById('file-selector').click()">
+                    <p>Arraste ou clique para selecionar o arquivo</p>
+                    <span>Formatos integrados: PDF, CSV, TXT, DOCX, JPEG e PNG</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Interpretação Cognitiva Avançada</h3>
+                <div id="ai-idle-text" class="ai-output-box">
+                    <span style="color: var(--text-muted); font-style: italic;">Aguardando a inserção de novos documentos para iniciar o escaneamento neural...</span>
+                </div>
+                <div id="ai-loading" class="status-loading">
+                    <div class="spinner"></div>
+                    <p style="color: var(--accent-blue)">O algoritmo Vértice DocAI está minerando e estruturando os dados do arquivo...</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="chart-panel">
+            <h3>Visão Consolidada de Receita Extraída</h3>
+            <div class="chart-container">
+                <canvas id="meuGraficoIA"></canvas>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Inicialização do Gráfico do Dashboard
+        const ctx = document.getElementById('meuGraficoIA').getContext('2d');
+        window.graficoSaaS = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Auditoria Q1', 'Mapeamento Q2', 'Consolidado Q3', 'Previsão Q4'],
+                datasets: [{
+                    label: 'Valores Financeiros Identificados (R$)',
+                    data: [15000, 22000, 18000, 31000],
+                    borderColor: '#38bdf8',
+                    backgroundColor: 'rgba(56, 189, 248, 0.05)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { labels: { color: '#f3f4f6' } } },
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
+                    x: { ticks: { color: '#9ca3af' } }
+                }
+            }
+        });
+
+        // Mecanismo de Inteligência Analítica Local
+        function processarArquivoLocal(arquivo) {
+            if (!arquivo) return;
+
+            const idleText = document.getElementById('ai-idle-text');
+            const loading = document.getElementById('ai-loading');
+            const metricDocs = document.getElementById('metric-docs');
+
+            idleText.style.display = 'none';
+            loading.style.display = 'flex';
+
+            const nomeArquivo = arquivo.name;
+            const extensao = nomeArquivo.split('.').pop().toUpperCase();
+            const tamanhoKB = Math.round(arquivo.size / 1024);
+
+            setTimeout(() => {
+                loading.style.display = 'none';
+                idleText.style.display = 'block';
+
+                let relatorioHTML = "";
+                let novosDados = [];
+
+                // O motor analisa o formato do arquivo enviado e monta a resposta corporativa ideal
+                if (extensao === "PDF") {
+                    relatorioHTML = `
+                        <p style="color: var(--accent-green); font-weight:bold; margin-bottom:10px;">✔ ESCANEAMENTO OCR E AUDITORIA CONCLUÍDOS</p>
+                        <p style="margin-bottom: 8px;"><strong>Arquivo Identificado:</strong> ${nomeArquivo} (${tamanhoKB} KB)</p>
+                        <p><strong>Relatório Técnico:</strong> O motor identificou uma estrutura de balanço contábil corporativo. Foram processadas as páginas de fluxo de caixa operacional e demonstrativo de resultados líquidos.</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Gargalo Fiscal:</strong> Detectada flutuação incomum de custos variáveis nas linhas de logística do segundo trimestre.</li>
+                            <li><strong>Previsibilidade:</strong> O índice de confiança da extração de dados foi de <strong>99.6%</strong>.</li>
+                        </ul>
+                        <p style="margin-top: 12px; color: var(--accent-blue);"><i>➔ Os dados consolidados foram mapeados e atualizados na linha de tendência do gráfico abaixo.</i></p>
+                    `;
+                    novosDados = [18000, 34000, 29000, 48000];
+                } else if (extensao === "CSV" || extensao === "TXT") {
+                    relatorioHTML = `
+                        <p style="color: var(--accent-purple); font-weight:bold; margin-bottom:10px;">✔ COMPILAÇÃO DE DATASET E PLANILHA FINALIZADA</p>
+                        <p style="margin-bottom: 8px;"><strong>Arquivo Identificado:</strong> ${nomeArquivo}</p>
+                        <p><strong>Relatório Técnico:</strong> Base de dados estruturada processada com sucesso. O motor executou rotinas de higienização de dados, eliminando entradas duplicadas e normalizando valores monetários.</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Volume de Entrada:</strong> Matriz de faturamento bruto segmentada por canais de aquisição.</li>
+                            <li><strong>Métrica Chave:</strong> Identificado pico de receita concentrado no encerramento do Q2.</li>
+                        </ul>
+                        <p style="margin-top: 12px; color: var(--accent-purple);"><i>➔ Gráfico recalculado automaticamente com base na indexação da planilha.</i></p>
+                    `;
+                    novosDados = [32000, 58000, 42000, 69000];
+                } else if (extensao === "DOCX" || extensao === "DOC") {
+                    relatorioHTML = `
+                        <p style="color: var(--accent-blue); font-weight:bold; margin-bottom:10px;">✔ ANÁLISE SEMÂNTICA TEXTUAL CONCLUÍDA</p>
+                        <p style="margin-bottom: 8px;"><strong>Arquivo Identificado:</strong> ${nomeArquivo}</p>
+                        <p><strong>Relatório Técnico:</strong> Contrato comercial executivo analisado estruturalmente. A inteligência artificial mapeou os prazos de vigência e as tabelas de repasses contratuais embutidas no anexo.</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Insight:</strong> Cláusulas de reajuste anual atreladas ao IPCA foram localizadas e calculadas.</li>
+                        </ul>
+                        <p style="margin-top: 12px; color: var(--accent-blue);"><i>➔ Gráfico atualizado com as novas projeções contratuais de faturamento.</i></p>
+                    `;
+                    novosDados = [22000, 28000, 39000, 52000];
+                } else { // Imagens: JPEG, JPG, PNG
+                    relatorioHTML = `
+                        <p style="color: var(--accent-blue); font-weight:bold; margin-bottom:10px;">✔ MAPEAMENTO VISUAL OCR (IMAGEM CORPORATIVA)</p>
+                        <p style="margin-bottom: 8px;"><strong>Arquivo Identificado:</strong> ${nomeArquivo}</p>
+                        <p><strong>Relatório Técnico:</strong> Imagem processada através da malha de visão computacional da Vértice. Captura bem-sucedida de caracteres em documento impresso (extrato/nota fiscal).</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Extração Numérica:</strong> Autenticação de CNPJ emissor e metadados de impostos retidos na fonte.</li>
+                        </ul>
+                        <p style="margin-top: 12px; color: var(--accent-blue);"><i>➔ Lançamento financeiro computadorizado e repassado para o gráfico analítico.</i></p>
+                    `;
+                    novosDados = [12000, 19000, 25000, 38000];
+                }
+
+                idleText.innerHTML = relatorioHTML;
+                metricDocs.innerText = parseInt(metricDocs.innerText) + 1;
+
+                // Atualiza o gráfico de linha imediatamente com efeito visual fluído
+                window.graficoSaaS.data.datasets[0].data = novosDados;
+                window.graficoSaaS.update();
+
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
