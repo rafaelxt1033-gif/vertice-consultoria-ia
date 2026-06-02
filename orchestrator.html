@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vértice 3 | Orchestrator - Agentes Autónomos de IA</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        :root {
+            --bg-main: #040612;
+            --bg-sidebar: #090c22;
+            --bg-card: #101438;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --accent-purple: #a855f7;
+            --accent-pink: #f43f5e;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: rgba(255, 255, 255, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; letter-spacing: 1px; }
+        .logo span { color: var(--accent-purple); }
+        .menu-links { list-style: none; margin-top: 3rem; flex-grow: 1; }
+        .menu-links li { padding: 1rem; margin-bottom: 0.5rem; border-radius: 8px; color: var(--text-muted); font-weight: 500; cursor: pointer; }
+        .menu-links li.active { background: rgba(168, 85, 247, 0.1); color: var(--accent-purple); }
+
+        /* CONTEÚDO PRINCIPAL */
+        .main-content { margin-left: 260px; flex-grow: 1; padding: 3rem; max-width: 1300px; width: calc(100% - 260px); }
+        .header-dash { margin-bottom: 3rem; display: flex; justify-content: space-between; align-items: center; }
+        .header-dash h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -1px; }
+        .header-dash p { color: var(--text-muted); font-weight: 300; }
+
+        /* BOTÃO DISPARADOR */
+        .btn-trigger {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white; border: none; padding: 12px 24px; border-radius: 10px;
+            font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(168, 85, 247, 0.3);
+        }
+        .btn-trigger:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(168, 85, 247, 0.5); }
+        .btn-trigger:disabled { background: #333; box-shadow: none; cursor: not-allowed; }
+
+        /* GRID PRINCIPAL */
+        .grid-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; margin-bottom: 2rem; }
+        @media (max-width: 1024px) { .grid-layout { grid-template-columns: 1fr; } }
+
+        .panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+        .panel h3 { font-size: 1.2rem; margin-bottom: 1.5rem; color: #fff; font-weight: 600; }
+
+        /* MATRIZ DE AGENTES */
+        .agent-item {
+            background: rgba(4, 6, 18, 0.4); border: 1px solid var(--border);
+            border-radius: 12px; padding: 1.2rem; margin-bottom: 1rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .agent-info h4 { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+        .agent-info p { font-size: 0.8rem; color: var(--text-muted); }
+        
+        /* STATUS PILL */
+        .status-pill { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+        .status-off { background: rgba(255,255,255,0.05); color: var(--text-muted); }
+        .status-ready { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); }
+        .status-running { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); animation: pulse 1.5s infinite; }
+        
+        @keyframes pulse { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+
+        /* TERMINAL DE LOGS */
+        .terminal-box {
+            background-color: #02030a; border: 1px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px; padding: 1.5rem; height: 320px;
+            font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+            line-height: 1.6; overflow-y: auto; color: #a7f3d0;
+        }
+
+        /* PAINEL INFERIOR: GRÁFICO E HISTÓRICO */
+        .bottom-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 2rem; }
+        @media (max-width: 992px) { .bottom-grid { grid-template-columns: 1fr; } }
+
+        .chart-container { position: relative; width: 100%; height: 260px; display: flex; justify-content: center; }
+
+        .tasks-list { list-style: none; }
+        .task-item {
+            padding: 10px 0; border-bottom: 1px solid var(--border);
+            font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;
+        }
+        .task-item span { font-weight: 600; color: var(--accent-green); }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div>
+            <div class="logo">VÉRTICE<span> 3</span></div>
+            <ul class="menu-links">
+                <li class="active">🤖 AI Orchestrator</li>
+                <li onclick="window.location.href='index.html'" style="margin-top: 2rem; border: 1px solid rgba(168, 85, 247, 0.2); background: rgba(168, 85, 247, 0.03); color: var(--accent-purple);">
+                    ↩ Voltar para Home
+                </li>
+            </ul>
+        </div>
+        <div class="user-profile">
+            <p>Rafael Diretor</p>
+            <span>Vértice Consultoria</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <header class="header-dash">
+            <div>
+                <h1>Vértice 3: Orchestrator</h1>
+                <p>Orquestração e disparo de fluxos autónomos através de agentes de IA multiplataforma.</p>
+            </div>
+            <button class="btn-trigger" id="btn-iniciar" onclick="dispararWorkflow()">Iniciar Workflow Inteligente</button>
+        </header>
+
+        <div class="grid-layout">
+            <div class="panel">
+                <h3>Agentes Disponíveis na Malha</h3>
+                
+                <div class="agent-item">
+                    <div class="agent-info">
+                        <h4>Agente Comercial (Scout)</h4>
+                        <p>Varre a web, captura leads e faz triagem de clientes.</p>
+                    </div>
+                    <span class="status-pill status-ready" id="status-comercial">Pronto</span>
+                </div>
+
+                <div class="agent-item">
+                    <div class="agent-info">
+                        <h4>Agente Analista (DocCore)</h4>
+                        <p>Analisa contratos, extrai KPIS e valida faturamentos.</p>
+                    </div>
+                    <span class="status-pill status-ready" id="status-analista">Pronto</span>
+                </div>
+
+                <div class="agent-item">
+                    <div class="agent-info">
+                        <h4>Agente Copywriter (TextAI)</h4>
+                        <p>Escreve propostas comerciais e envia e-mails altamente persuasivos.</p>
+                    </div>
+                    <span class="status-pill status-ready" id="status-copy">Pronto</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Terminal Core Executivo (Ações da IA)</h3>
+                <div class="terminal-box" id="terminal-logs">
+                    [Sistema Vértice 3 Inicializado com Sucesso]<br>
+                    [Aguardando comando de disparo para acordar a malha de agentes...]<br>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-grid">
+            <div class="panel">
+                <h3>Distribuição de Esforço dos Agentes</h3>
+                <div class="chart-container">
+                    <canvas id="graficoPizza"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Histórico Prático de Entregas Recentes</h3>
+                <ul class="tasks-list" id="lista-entregas">
+                    <li class="task-item" style="color: var(--text-muted); italic">Nenhum workflow rodou na sessão atual.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicialização do Gráfico de Pizza/Donut (Chart.js)
+        const ctx = document.getElementById('graficoPizza').getContext('2d');
+        window.meuGraficoPizza = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Comercial', 'Analista', 'Copywriter'],
+                datasets: [{
+                    data: [33, 33, 33], // Começa equilibrado
+                    backgroundColor: ['#38bdf8', '#10b981', '#a855f7'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom', labels: { color: '#f3f4f6', font: { size: 11 } } }
+                }
+            }
+        });
+
+        // Lógica de Simulação do Workflow de Agentes Autónomos
+        function log NoTerminal(texto, cor = "#a7f3d0") {
+            const terminal = document.getElementById('terminal-logs');
+            terminal.innerHTML += `<span style="color: ${cor}">${texto}</span><br>`;
+            terminal.scrollTop = terminal.scrollHeight; // Auto-scroll para baixo
+        }
+
+        function dispararWorkflow() {
+            const btn = document.getElementById('btn-iniciar');
+            const term = document.getElementById('terminal-logs');
+            const entregas = document.getElementById('lista-entregas');
+            
+            // Bloqueia o botão enquanto roda
+            btn.disabled = true;
+            term.innerHTML = ""; // Limpa logs anteriores
+            entregas.innerHTML = ""; // Limpa entregas antigas
+
+            // Alterar Estados visuais dos pills para "Rodando"
+            document.getElementById('status-comercial').className = "status-pill status-running";
+            document.getElementById('status-comercial').innerText = "Processando";
+
+            // PASSO 1: AGENTE COMERCIAL AGINDO
+            logNoTerminal("[AGENTE COMERCIAL] Ligando motores de busca web...", "#38bdf8");
+            
+            setTimeout(() => {
+                logNoTerminal("[AGENTE COMERCIAL] Identificadas 14 empresas com padrão de gargalo operacional.", "#38bdf8");
+                logNoTerminal("[AGENTE COMERCIAL] Filtrando leads de alta conversão através de scoring preditivo...", "#38bdf8");
+                
+                setTimeout(() => {
+                    logNoTerminal("[AGENTE COMERCIAL] Sucesso! Lead 'Tech-Solutions Global' selecionada para ataque comercial.", "#10b981");
+                    
+                    // Atualiza Estado do Comercial e Liga o Analista
+                    document.getElementById('status-comercial').className = "status-pill status-ready";
+                    document.getElementById('status-comercial').innerText = "Concluído";
+                    document.getElementById('status-analista').className = "status-pill status-running";
+                    document.getElementById('status-analista').innerText = "Processando";
+
+                    // PASSO 2: AGENTE ANALISTA ENTRA EM AÇÃO
+                    logNoTerminal("[AGENTE ANALISTA] Intercetando base de dados públicas e relatórios anexos da Tech-Solutions...", "#10b981");
+                    
+                    setTimeout(() => {
+                        logNoTerminal("[AGENTE ANALISTA] OCR concluído em 3 balancetes fiscais encontrados.", "#10b981");
+                        logNoTerminal("[AGENTE ANALISTA] Descoberto vazamento de margem de 18% no setor de estoque.", "#10b981");
+                        logNoTerminal("[AGENTE ANALISTA] Dados empacotados e enviados para o pipeline de geração de propostas.", "#10b981");
+
+                        setTimeout(() => {
+                            // Atualiza Estado do Analista e Liga o Copywriter
+                            document.getElementById('status-analista').className = "status-pill status-ready";
+                            document.getElementById('status-analista').innerText = "Concluído";
+                            document.getElementById('status-copy').className = "status-pill status-running";
+                            document.getElementById('status-copy').innerText = "Processando";
+
+                            // PASSO 3: AGENTE COPYWRITER ENTRA EM AÇÃO
+                            logNoTerminal("[AGENTE COPYWRITER] Recebendo briefings e métricas do Agente Analista...", "#a855f7");
+                            
+                            setTimeout(() => {
+                                logNoTerminal("[AGENTE COPYWRITER] Escrevendo e-mail personalizado hiper-focado na dor de 18% de quebra de estoque.", "#a855f7");
+                                logNoTerminal("[AGENTE COPYWRITER] Disparando gatilhos mentais corporativos de alta ancoragem de preço.", "#a855f7");
+                                logNoTerminal("[AGENTE COPYWRITER] [ENVIO] E-mail enviado com sucesso para: diretor@techsolutions.com.", "#10b981");
+
+                                setTimeout(() => {
+                                    // Finaliza todos os estados
+                                    document.getElementById('status-copy').className = "status-pill status-ready";
+                                    document.getElementById('status-copy').innerText = "Concluído";
+                                    btn.disabled = false;
+
+                                    logNoTerminal("<br><b>[WORKFLOW CONCLUÍDO COM SUCESSO COGNITIVO]</b>", "#fff");
+                                    
+                                    // Injeta as entregas reais na lista da tela
+                                    entregas.innerHTML = `
+                                        <li class="task-item">Prospecção 'Tech-Solutions' concluída <span>SUCESSO</span></li>
+                                        <li class="task-item">Auditoria de quebra de estoque anexada <span>EFETUADO</span></li>
+                                        <li class="task-item">E-mail de abordagem outbound disparado <span>ENVIADO</span></li>
+                                    `;
+
+                                    // Modifica o esforço do gráfico de pizza baseado no processamento real
+                                    window.meuGraficoPizza.data.datasets[0].data = [25, 45, 30]; // Analista trabalhou mais!
+                                    window.meuGraficoPizza.update();
+
+                                }, 1200);
+                            }, 1500);
+                        }, 1200);
+                    }, 1800);
+                }, 1500);
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
