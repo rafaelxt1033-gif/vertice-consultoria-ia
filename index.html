@@ -3,459 +3,145 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garrido & Associados | Advocacia Corporativa</title>
-    
-    <!-- Tipografia de Luxo: Playfair Display para Títulos e Inter para Textos -->
+    <title>Rafael | Desenvolvedor Web & IA</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* RESET & VARIAVEIS DE LUXO */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* ESTILOS DO HUB DO PORTFÓLIO PRINCIPAL */
         :root {
-            --cor-fundo: #0a0b0d;       /* Preto profundo */
-            --cor-fundo-card: #13151a;  /* Cinza escuro de contraste */
-            --cor-ouro: #c5a880;        /* Dourado Champagne */
-            --cor-ouro-hover: #b39369;  
-            --cor-texto-p: #94a3b8;     /* Cinza suave para leitura */
-            --cor-texto-h: #ffffff;     /* Branco puro para títulos */
-            --cor-linha: rgba(197, 168, 128, 0.15); /* Linha dourada sutil */
-            --font-titulo: 'Playfair Display', serif;
-            --font-corpo: 'Inter', sans-serif;
+            --bg-color: #050505; --text-color: #e5e5e5; --accent-color: #38bdf8;
+            --card-bg: #111111; --border-color: #222222;
         }
-
-        html {
-            scroll-behavior: smooth;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body.hub-ativo {
+            font-family: 'Inter', sans-serif; background-color: var(--bg-color);
+            color: var(--text-color); line-height: 1.6; overflow-x: hidden;
         }
+        .container-hub { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        header.hub-header { padding: 8rem 0 5rem 0; text-align: center; }
+        header.hub-header h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -1px; }
+        header.hub-header h1 span { color: var(--accent-color); }
+        header.hub-header p { font-size: 1.2rem; color: #888; max-width: 600px; margin: 0 auto; font-weight: 300; }
+        .portfolio-section { padding: 4rem 0 8rem 0; }
+        .grid-hub { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+        .card-hub { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; transition: transform 0.3s, border-color 0.3s; }
+        .card-hub:hover { transform: translateY(-8px); border-color: var(--accent-color); }
+        .card-content-hub { padding: 2rem; }
+        .niche-tag { display: inline-block; padding: 0.3rem 0.8rem; background: rgba(56, 189, 248, 0.1); color: var(--accent-color); font-size: 0.75rem; font-weight: 600; border-radius: 20px; margin-bottom: 1rem; text-transform: uppercase; }
+        .card-hub h3 { font-size: 1.5rem; margin-bottom: 0.5rem; color: #fff; }
+        .card-hub p { font-size: 0.95rem; color: #888; margin-bottom: 2rem; }
+        .btn-view { display: inline-block; width: 100%; text-align: center; padding: 0.8rem; background-color: transparent; color: #fff; text-decoration: none; border: 1px solid #333; border-radius: 6px; font-weight: 600; transition: all 0.2s; cursor: pointer; }
+        .btn-view:hover { background-color: var(--accent-color); border-color: var(--accent-color); color: #000; }
+        footer.hub-footer { text-align: center; padding: 3rem 0; border-top: 1px solid var(--border-color); color: #555; font-size: 0.9rem; }
 
-        body {
-            font-family: var(--font-corpo);
-            color: var(--cor-texto-p);
-            background-color: var(--cor-fundo);
-            line-height: 1.8;
-            -webkit-font-smoothing: antialiased;
-        }
+        /* CONTROLE DE VISIBILIDADE DAS CAIXAS / ABAS */
+        .view-projeto { display: none; width: 100%; min-height: 100vh; }
+        .btn-voltar-flutuante { position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: #fff; color: #000; padding: 10px 20px; border-radius: 50px; font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; border: 2px solid #000; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: transform 0.2s; }
+        .btn-voltar-flutuante:hover { transform: scale(1.05); background: #38bdf8; color: #000; }
 
-        .container {
-            width: 88%;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        /* ========================================================== */
+        /* CSS INJETADO: VÉRTICE CONSULTORIA */
+        /* ========================================================== */
+        .vertice-body { font-family: 'Inter', sans-serif; color: #f3f4f6; line-height: 1.7; background-color: #0b0f19; -webkit-font-smoothing: antialiased; }
+        .vertice-container { width: 88%; max-width: 1050px; margin: 0 auto; }
+        .vertice-padding { padding: 8rem 0; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+        .vertice-bg-claro { background-color: rgba(255, 255, 255, 0.01); }
+        .vertice-bg-escuro { background-color: #060911; }
+        .vertice-title { font-size: 2.4rem; color: #f3f4f6; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 4rem; }
+        .vertice-subtitle { color: #9ca3af; margin-top: -3rem; margin-bottom: 4rem; font-weight: 300; }
+        .v-btn, #btn-enviar, #btn-whatsapp { display: inline-block; padding: 0.9rem 2.2rem; font-weight: 600; font-size: 0.9rem; text-decoration: none; border-radius: 6px; transition: all 0.2s; cursor: pointer; border: none; text-align: center; }
+        .v-btn-primary, #btn-enviar { background-color: #38bdf8; color: #0b0f19; }
+        .v-btn-primary:hover, #btn-enviar:hover { background-color: #0284c7; color: white; transform: translateY(-2px); }
+        .v-btn-secondary { background: rgba(56, 189, 248, 0.1); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.2); }
+        .v-navbar { background-color: rgba(11, 15, 25, 0.85); backdrop-filter: blur(12px); padding: 1.5rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+        .v-navbar .vertice-container { display: flex; justify-content: space-between; align-items: center; }
+        .v-logo { color: #f3f4f6; font-size: 1.3rem; font-weight: 700; letter-spacing: 2px; }
+        .v-logo span { color: #38bdf8; }
+        .v-nav-links { display: flex; list-style: none; gap: 3rem; }
+        .v-nav-links a { color: #9ca3af; text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+        .v-nav-links a:hover { color: #f3f4f6; }
+        .v-hero { padding: 10rem 0; }
+        .v-hero-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 4rem; align-items: center; }
+        .v-hero-content h1 { font-size: 3.4rem; line-height: 1.15; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 2rem; background: linear-gradient(to right, #ffffff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .v-hero-content h1 span { color: #38bdf8; -webkit-text-fill-color: #38bdf8; }
+        .v-hero-content p { font-size: 1.2rem; color: #9ca3af; margin-bottom: 3rem; max-width: 540px; font-weight: 300; }
+        .v-hero-image img { width: 100%; max-width: 420px; height: auto; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 0 30px rgba(56, 189, 248, 0.15); }
+        .v-grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 4rem; }
+        .v-card { background: #151d30; padding: 2.5rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.06); transition: transform 0.3s, border-color 0.3s; }
+        .v-card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.3); }
+        .v-card h3 { color: #f3f4f6; margin-bottom: 1rem; font-size: 1.4rem; font-weight: 600; }
+        .v-card p { color: #9ca3af; font-weight: 300; font-size: 0.95rem; }
+        .v-card-pain { border-top: 2px solid #ef4444; }
+        .v-card-number { font-size: 0.85rem; font-weight: 700; color: #38bdf8; display: block; margin-bottom: 0.7rem; letter-spacing: 0.1em; }
+        .v-card-diagnostico { background-color: #151d30; max-width: 700px; margin: 0 auto; padding: 3rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .v-card-diagnostico h3 { font-size: 1.6rem; margin-bottom: 0.5rem; }
+        .v-card-diagnostico p { color: #9ca3af; margin-bottom: 1.5rem; font-weight: 300; }
+        .v-textarea { width: 100%; height: 130px; background-color: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; padding: 1rem; color: white; font-size: 1rem; resize: none; margin-bottom: 1.5rem; }
+        .v-card-resposta { max-width: 700px; margin: 2rem auto 0 auto; background: linear-gradient(135deg, #151d30 0%, #0f1626 100%); padding: 3rem; border-radius: 16px; border: 1px solid rgba(56, 189, 248, 0.2); display: none; }
+        .v-resposta-visivel { display: block !important; animation: vFadeIn 0.5s ease-in-out; }
+        .v-card-resposta h2 { font-size: 1.5rem; margin-bottom: 1.5rem; color: #38bdf8; border-bottom: 1px solid rgba(255, 255, 255, 0.06); padding-bottom: 0.5rem; }
+        #ia-resposta { font-size: 1rem; color: #e5e7eb; margin-bottom: 2.5rem; }
+        .v-cta-section { background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 8px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .v-cta-section p { margin-bottom: 1.2rem; font-weight: 500; }
+        #btn-whatsapp { background-color: #25d366; width: 100%; color: white; }
+        #btn-whatsapp:hover { background-color: #20ba5a; transform: translateY(-2px); }
+        .v-stat-item .v-number { font-size: 3.5rem; font-weight: 700; color: #f3f4f6; display: block; margin-bottom: 0.5rem; letter-spacing: -0.03em; }
+        .v-stat-item p { color: #9ca3af; font-weight: 300; }
+        .v-form-container { max-width: 600px; margin: 0 auto; background-color: #151d30; padding: 3rem; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.06); }
+        .v-form-group { margin-bottom: 1.5rem; text-align: left; }
+        .v-form-group label { display: block; margin-bottom: 0.5rem; font-size: 0.9rem; color: #f3f4f6; }
+        .v-form-group input, .v-form-group select { width: 100%; padding: 0.8rem 1rem; background-color: #0b0f19; border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 8px; color: white; }
+        .v-footer { background-color: #060911; color: #475569; padding: 6rem 0; font-size: 0.85rem; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+        @keyframes vFadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .section-padding {
-            padding: 9rem 0;
-        }
+        /* ========================================================== */
+        /* CSS INJETADO: GARRIDO & ASSOCIADOS */
+        /* ========================================================== */
+        .garrido-body { font-family: 'Inter', sans-serif; color: #94a3b8; background-color: #0a0b0d; line-height: 1.8; -webkit-font-smoothing: antialiased; }
+        .g-container { width: 88%; max-width: 1100px; margin: 0 auto; }
+        .g-padding { padding: 9rem 0; }
+        .garrido-body h1, .garrido-body h2, .garrido-body h3 { font-family: 'Playfair Display', serif; color: #ffffff; font-weight: 500; letter-spacing: -0.01em; }
+        .g-section-title { font-size: 2.6rem; margin-bottom: 1rem; }
+        .g-section-subtitle { font-size: 1rem; color: #c5a880; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 4rem; display: block; }
+        .g-btn { display: inline-block; padding: 1rem 2.5rem; font-size: 0.85rem; font-weight: 500; text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; transition: all 0.3s ease; cursor: pointer; border: none; }
+        .g-btn-primary { background-color: #c5a880; color: #0a0b0d; }
+        .g-btn-primary:hover { background-color: #b39369; }
+        .g-btn-secondary { background-color: transparent; color: #ffffff; border: 1px solid rgba(197, 168, 128, 0.15); }
+        .g-btn-secondary:hover { border-color: #c5a880; color: #c5a880; }
+        .g-navbar { background-color: rgba(10, 11, 13, 0.95); padding: 2rem 0; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(197, 168, 128, 0.15); backdrop-filter: blur(10px); }
+        .g-navbar .g-container { display: flex; justify-content: space-between; align-items: center; }
+        .g-logo { font-family: 'Playfair Display', serif; color: #ffffff; font-size: 1.5rem; letter-spacing: 1px; text-decoration: none; }
+        .g-logo span { color: #c5a880; }
+        .g-nav-links { display: flex; list-style: none; gap: 3rem; }
+        .g-nav-links a { color: #94a3b8; text-decoration: none; font-size: 0.85rem; letter-spacing: 0.05em; }
+        .g-nav-links a:hover { color: #c5a880; }
+        .g-hero { padding: 12rem 0; border-bottom: 1px solid rgba(197, 168, 128, 0.15); }
+        .g-hero h1 { font-size: 4rem; line-height: 1.15; margin-bottom: 2rem; }
+        .g-hero h1 span { font-style: italic; color: #c5a880; font-weight: 400; }
+        .g-hero p { font-size: 1.2rem; color: #94a3b8; margin-bottom: 3.5rem; font-weight: 300; }
+        .g-hero-buttons { display: flex; gap: 1.5rem; }
+        .g-grid-atuação { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2.5rem; }
+        .g-card-atuação { background-color: #13151a; padding: 3.5rem 2.5rem; border: 1px solid rgba(255, 255, 255, 0.02); transition: transform 0.3s, border-color 0.3s; }
+        .g-card-atuação:hover { transform: translateY(-5px); border-color: #c5a880; }
+        .g-card-atuação .g-icon { font-size: 1.2rem; color: #c5a880; margin-bottom: 1.5rem; display: block; letter-spacing: 0.1em; font-weight: 500; }
+        .g-sobre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+        .g-sobre-text h2 { font-size: 2.8rem; margin-bottom: 2rem; line-height: 1.2; }
+        .g-sobre-frame { border: 1px solid #c5a880; padding: 3rem; text-align: center; }
+        .g-sobre-frame h3 { font-size: 2rem; color: #c5a880; margin-bottom: 1rem; }
+        .g-form-luxury { background-color: #13151a; padding: 4rem; border: 1px solid rgba(255, 255, 255, 0.02); max-width: 600px; margin: 0 auto; }
+        .g-form-group { margin-bottom: 2.5rem; text-align: left; }
+        .g-form-group label { display: block; font-size: 0.75rem; color: #c5a880; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.7rem; }
+        .g-form-group input, .g-form-group textarea { width: 100%; background: transparent; border: none; border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding: 0.5rem 0; color: #ffffff; font-size: 1rem; outline: none; }
+        .g-form-group input:focus, .g-form-group textarea:focus { border-bottom-color: #c5a880; }
+        .g-footer { padding: 5rem 0; border-top: 1px solid rgba(197, 168, 128, 0.15); font-size: 0.8rem; letter-spacing: 0.05em; background-color: #0a0b0d; }
 
-        .text-center {
-            text-align: center;
-        }
-
-        /* TIPOGRAFIA */
-        h1, h2, h3 {
-            font-family: var(--font-titulo);
-            color: var(--cor-texto-h);
-            font-weight: 500;
-            letter-spacing: -0.01em;
-        }
-
-        .section-title {
-            font-size: 2.6rem;
-            margin-bottom: 1rem;
-        }
-
-        .section-subtitle {
-            font-size: 1rem;
-            color: var(--cor-ouro);
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            margin-bottom: 4rem;
-            display: block;
-        }
-
-        /* BOTÕES DE ALTO PADRÃO */
-        .btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            font-family: var(--font-corpo);
-            font-size: 0.85rem;
-            font-weight: 500;
-            text-decoration: none;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-
-        .btn-primary {
-            background-color: var(--cor-ouro);
-            color: var(--cor-fundo);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--cor-ouro-hover);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--cor-texto-h);
-            border: 1px solid var(--cor-linha);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--cor-ouro);
-            color: var(--cor-ouro);
-        }
-
-        /* NAVEGAÇÃO */
-        .navbar {
-            background-color: rgba(10, 11, 13, 0.95);
-            padding: 2rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid var(--cor-linha);
-            backdrop-filter: blur(10px);
-        }
-
-        .navbar .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-family: var(--font-titulo);
-            color: var(--cor-texto-h);
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            text-decoration: none;
-        }
-
-        .logo span {
-            color: var(--cor-ouro);
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 3rem;
-        }
-
-        .nav-links a {
-            color: var(--cor-texto-p);
-            text-decoration: none;
-            font-size: 0.85rem;
-            letter-spacing: 0.05em;
-            transition: color 0.2s;
-        }
-
-        .nav-links a:hover {
-            color: var(--cor-ouro);
-        }
-
-        /* SEÇÃO HERO */
-        .hero {
-            padding: 12rem 0;
-            border-bottom: 1px solid var(--cor-linha);
-            position: relative;
-        }
-
-        .hero-max-width {
-            max-width: 800px;
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            line-height: 1.15;
-            margin-bottom: 2rem;
-        }
-
-        .hero h1 span {
-            font-style: italic;
-            color: var(--cor-ouro);
-            font-weight: 400;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--cor-texto-p);
-            margin-bottom: 3.5rem;
-            font-weight: 300;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        /* ÁREAS DE ATUAÇÃO (GRID) */
-        .grid-atuação {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .card-atuação {
-            background-color: var(--cor-fundo-card);
-            padding: 3.5rem 2.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .card-atuação:hover {
-            transform: translateY(-5px);
-            border-color: var(--cor-ouro);
-        }
-
-        .card-atuação .icon {
-            font-size: 1.2rem;
-            color: var(--cor-ouro);
-            margin-bottom: 1.5rem;
-            display: block;
-            letter-spacing: 0.1em;
-            font-weight: 500;
-        }
-
-        .card-atuação h3 {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-        }
-
-        .card-atuação p {
-            font-size: 0.95rem;
-            font-weight: 300;
-        }
-
-        /* SEÇÃO FILOSOFIA (SOBRE) */
-        .sobre-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 6rem;
-            align-items: center;
-        }
-
-        .sobre-text h2 {
-            font-size: 2.8rem;
-            margin-bottom: 2rem;
-            line-height: 1.2;
-        }
-
-        .sobre-text p {
-            font-weight: 300;
-            margin-bottom: 1.5rem;
-        }
-
-        .sobre-frame {
-            border: 1px solid var(--cor-ouro);
-            padding: 3rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .sobre-frame h3 {
-            font-size: 2rem;
-            color: var(--cor-ouro);
-            margin-bottom: 1rem;
-        }
-
-        /* SEÇÃO CONTATO (AGENDAMENTO EXCLUSIVO) */
-        .contato-wrapper {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .form-luxury {
-            background-color: var(--cor-fundo-card);
-            padding: 4rem;
-            border: 1px solid rgba(255, 255, 255, 0.02);
-        }
-
-        .form-group {
-            margin-bottom: 2.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.75rem;
-            color: var(--cor-ouro);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.7rem;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 0.5rem 0;
-            font-family: var(--font-corpo);
-            color: var(--cor-texto-h);
-            font-size: 1rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border-bottom-color: var(--cor-ouro);
-        }
-
-        .btn-full {
-            width: 100%;
-            padding: 1.2rem;
-        }
-
-        /* RODAPÉ */
-        .footer {
-            padding: 5rem 0;
-            border-top: 1px solid var(--cor-linha);
-            font-size: 0.8rem;
-            letter-spacing: 0.05em;
-        }
-
-        .footer p {
-            margin-bottom: 0.5rem;
-        }
-
-        .footer-credito {
-            color: var(--cor-ouro);
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 992px) {
-            .hero h1 { font-size: 2.8rem; }
-            .sobre-grid { grid-template-columns: 1fr; gap: 4rem; }
-            .section-padding { padding: 6rem 0; }
-            .form-luxury { padding: 2.5rem; }
-        }
-
-        @media (max-width: 768px) {
-            .navbar nav, .navbar .btn { display: none; }
-            .hero-buttons { flex-direction: column; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAVBAR -->
-    <header class="navbar">
-        <div class="container">
-            <a href="#" class="logo">GARRIDO<span>&</span>A.</a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#atuacao">Áreas de Atuação</a></li>
-                    <li><a href="#filosofia">Nossa Filosofia</a></li>
-                    <li><a href="#agendamento">Consultoria</a></li>
-                </ul>
-            </nav>
-            <a href="#agendamento" class="btn btn-secondary" style="padding: 0.6rem 1.5rem; font-size: 0.75rem;">Agendar Reunião</a>
-        </div>
-    </header>
-
-    <main>
-        <!-- SEÇÃO HERO -->
-        <section class="hero">
-            <div class="container">
-                <div class="hero-max-width">
-                    <h1>Defesa estratégica para grandes <span>patrimônios e negócios</span>.</h1>
-                    <p>Boutique jurídica focada em soluções sob medida nas áreas de Direito Corporativo, Tributário e Planejamento Sucessório de alta renda.</p>
-                    <div class="hero-buttons">
-                        <a href="#agendamento" class="btn btn-primary">Agendar Consulta Privada</a>
-                        <a href="#atuacao" class="btn btn-secondary">Conhecer Áreas</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO ÁREAS DE ATUAÇÃO -->
-        <section id="atuacao" class="section-padding">
-            <div class="container">
-                <div class="text-center">
-                    <span class="section-subtitle">Prática Jurídica</span>
-                    <h2 class="section-title">Áreas de Especialidade</h2>
-                </div>
-                
-                <div class="grid-atuação">
-                    <div class="card-atuação">
-                        <span class="icon">I / CORPORATIVO</span>
-                        <h3>Fusões, Aquisições e Governança</h3>
-                        <p>Estruturação de operações societárias complexas, acordos de acionistas e proteção legal de marcas e ativos empresariais.</p>
-                    </div>
-                    <div class="card-atuação">
-                        <span class="icon">II / TRIBUTÁRIO</span>
-                        <h3>Defesa e Planejamento Fiscal</h3>
-                        <p>Análise de estruturas fiscais complexas, redução legal da carga tributária e representação em contenciosos de alto valor.</p>
-                    </div>
-                    <div class="card-atuação">
-                        <span class="icon">III / SUCESSÓRIO</span>
-                        <h3>Planejamento Familiar e Sucessório</h3>
-                        <p>Desenho de holdings familiares, testamentos e blindagem patrimonial para garantir a perpetuidade do legado de forma segura.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO NOSSA FILOSOFIA (SOBRE) -->
-        <section id="filosofia" class="section-padding" style="background-color: #0d0f14; border-top: 1px solid var(--cor-linha); border-bottom: 1px solid var(--cor-linha);">
-            <div class="container">
-                <div class="sobre-grid">
-                    <div class="sobre-text">
-                        <h2>Atendimento restrito. Resultados expressivos.</h2>
-                        <p>Diferente de escritórios de advocacia em massa, escolhemos operar como uma banca boutique. Isso significa que limitamos rigorosamente o número de clientes que aceitamos anualmente.</p>
-                        <p>Cada caso recebe a atenção direta dos sócios fundadores, garantindo rigor analítico, sigilo absoluto e agilidade incompatível com estruturas tradicionais inchadas.</p>
-                    </div>
-                    <div class="sobre-frame">
-                        <h3>18+ Anos</h3>
-                        <p style="color: var(--cor-texto-h); text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.8rem; margin-bottom: 1rem;">De Atuação Exclusiva</p>
-                        <p style="font-size: 0.95rem;">Com mais de R$ 450 milhões em patrimônios protegidos e defendidos em tribunais de todo o país.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SEÇÃO AGENDAMENTO (CONTATO) -->
-        <section id="agendamento" class="section-padding">
-            <div class="container">
-                <div class="text-center">
-                    <span class="section-subtitle">Contato Exclusivo</span>
-                    <h2 class="section-title">Solicite uma Análise de Caso</h2>
-                </div>
-
-                <div class="contato-wrapper">
-                    <form class="form-luxury">
-                        <div class="form-group">
-                            <label for="nome">Nome Completo</label>
-                            <input type="text" id="nome" required placeholder="Ex: Dr. Roberto Alencar">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">E-mail de Contato</label>
-                            <input type="email" id="email" required placeholder="Ex: roberto@empresa.com">
-                        </div>
-                        <div class="form-group">
-                            <label for="mensagem">Breve Descrição da Demanda (Sigilo Garantido)</label>
-                            <textarea id="mensagem" rows="3" required placeholder="Descreva sucintamente a natureza jurídica da sua questão..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-full">Solicitar Agendamento</button>
-                    </form>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- RODAPÉ -->
-    <footer class="footer text-center">
-        <div class="container">
-            <p>&copy; 2026 Garrido & Associados. Todos os direitos reservados para fins de portfólio.</p>
-            <p class="footer-credito">Desenvolvido por Rafael - Portfólio Profissional</p>
-        </div>
-    </footer>
-
-</body>
-</html>
+        /* ========================================================== */
+        /* CSS INJETADO: LUMINA CLINICA */
+        /* ========================================================== */
+        .lumina-body { font-family: 'Plus Jakarta Sans', sans-serif; color: #4a5568; background-color: #ffffff; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+        .l-container { width: 88%; max-width: 1050px; margin: 0 auto; }
+        .l-padding { padding: 8rem 0; }
+        .lumina-body h1, .lumina-body h2, .lumina-body h3 { color: #1a202c; font-weight: 600; letter-spacing: -0.02em; }
+        .l-section-title { font-size: 2.4rem; margin-bottom: 3rem; }
