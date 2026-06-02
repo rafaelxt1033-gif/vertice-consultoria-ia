@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
+    <!-- Chart.js para o Gráfico de Linha em Tempo Real -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -115,22 +116,24 @@
 </head>
 <body>
 
+    <!-- MENU LATERAL -->
     <div class="sidebar">
         <div>
             <div class="logo">VÉRTICE<span> 3</span></div>
             <ul class="menu-links">
                 <li class="active">🤖 AI Orchestrator</li>
-                <li onclick="window.location.href='index.html'" style="margin-top: 2rem; border: 1px solid rgba(168, 85, 247, 0.2); background: rgba(168, 247, 168, 0.03); color: var(--accent-purple);">
+                <li onclick="window.location.href='index.html'" style="margin-top: 2rem; border: 1px solid rgba(168, 85, 247, 0.2); background: rgba(168, 85, 247, 0.03); color: var(--accent-purple);">
                     ↩ Voltar para Home
                 </li>
             </ul>
         </div>
         <div class="user-profile">
-            <p>Rafael Director</p>
+            <p>Rafael Diretor</p>
             <span>Vértice Consultoria</span>
         </div>
     </div>
 
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="main-content">
         <header class="header-dash">
             <div>
@@ -140,6 +143,7 @@
             <button class="btn-trigger" id="btn-iniciar" onclick="dispararWorkflow()">Iniciar Workflow Inteligente</button>
         </header>
 
+        <!-- GRID SUPERIOR: GESTÃO DE AGENTES E TERMINAL -->
         <div class="grid-layout">
             <div class="panel">
                 <h3>Agentes Disponíveis na Malha</h3>
@@ -149,3 +153,191 @@
                         <h4>Agente Comercial (Scout)</h4>
                         <p>Varre a web, captura leads e faz triagem de clientes.</p>
                     </div>
+                    <span class="status-pill status-ready" id="status-comercial">Pronto</span>
+                </div>
+
+                <div class="agent-item">
+                    <div class="agent-info">
+                        <h4>Agente Analista (DocCore)</h4>
+                        <p>Analisa contratos, extrai KPIS e valida faturamentos.</p>
+                    </div>
+                    <span class="status-pill status-ready" id="status-analista">Pronto</span>
+                </div>
+
+                <div class="agent-item">
+                    <div class="agent-info">
+                        <h4>Agente Copywriter (TextAI)</h4>
+                        <p>Escreve propostas comerciais e envia e-mails altamente persuasivos.</p>
+                    </div>
+                    <span class="status-pill status-ready" id="status-copy">Pronto</span>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Terminal Core Executivo (Ações da IA)</h3>
+                <div class="terminal-box" id="terminal-logs">
+                    [Sistema Vértice 3 Inicializado com Sucesso]<br>
+                    [Aguardando comando de disparo para acordar a malha de agentes...]<br>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID INFERIOR: GRÁFICO DE DESEMPENHO EM TEMPO REAL -->
+        <div class="bottom-grid">
+            <div class="panel">
+                <h3>Velocímetro de Performance (Tokens Processados / Seg)</h3>
+                <div class="chart-container">
+                    <canvas id="graficoLinhaTempoReal"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>Mural de Entregas</h3>
+                <ul class="tasks-list" id="lista-entregas">
+                    <li class="task-item" style="color: var(--text-muted); font-style: italic;">Nenhum fluxo executado na sessão atual.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração Inicial do Gráfico de Linha Temporal (Mecanismo em Tempo Real)
+        const ctx = document.getElementById('graficoLinhaTempoReal').getContext('2d');
+        
+        let dadosIniciais = [5, 4, 6, 5, 4, 5, 4, 6, 5, 5];
+        let labelsIniciais = ['1s', '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s'];
+
+        window.graficoPerformance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labelsIniciais,
+                datasets: [{
+                    label: 'Velocidade de Processamento Cognitivo',
+                    data: dadosIniciais,
+                    borderColor: '#a855f7',
+                    backgroundColor: 'rgba(168, 85, 247, 0.05)',
+                    borderWidth: 2,
+                    pointRadius: 1,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { min: 0, max: 100, grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#9ca3af' } },
+                    x: { grid: { display: false }, ticks: { color: '#9ca3af' } }
+                }
+            }
+        });
+
+        let intervaloGrafico;
+        let contadorTempo = 10;
+
+        function ligarMotorGraficoAtivo() {
+            window.graficoPerformance.data.datasets[0].borderColor = '#10b981';
+            window.graficoPerformance.data.datasets[0].backgroundColor = 'rgba(16, 185, 129, 0.05)';
+
+            intervaloGrafico = setInterval(() => {
+                contadorTempo++;
+                let novoValorTokens = Math.floor(Math.random() * 50) + 45;
+
+                window.graficoPerformance.data.labels.shift();
+                window.graficoPerformance.data.labels.push(contadorTempo + 's');
+                
+                window.graficoPerformance.data.datasets[0].data.shift();
+                window.graficoPerformance.data.datasets[0].data.push(novoValorTokens);
+
+                window.graficoPerformance.update('none'); 
+            }, 300); 
+        }
+
+        function desligarMotorGrafico() {
+            clearInterval(intervaloGrafico);
+            window.graficoPerformance.data.datasets[0].borderColor = '#a855f7';
+            window.graficoPerformance.data.datasets[0].backgroundColor = 'rgba(168, 85, 247, 0.05)';
+            window.graficoPerformance.data.datasets[0].data = [4, 5, 4, 6, 5, 4, 5, 4, 5, 4];
+            window.graficoPerformance.update();
+        }
+
+        function logNoTerminal(texto, cor = "#a7f3d0") {
+            const terminal = document.getElementById('terminal-logs');
+            terminal.innerHTML += `<span style="color: ${cor}">${texto}</span><br>`;
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Fluxo de Execução Principal
+        function dispararWorkflow() {
+            const btn = document.getElementById('btn-iniciar');
+            const term = document.getElementById('terminal-logs');
+            const entregas = document.getElementById('lista-entregas');
+            
+            btn.disabled = true;
+            term.innerHTML = ""; 
+            entregas.innerHTML = ""; 
+
+            ligarMotorGraficoAtivo();
+
+            document.getElementById('status-comercial').className = "status-pill status-running";
+            document.getElementById('status-comercial').innerText = "Processando";
+
+            logNoTerminal("[AGENTE COMERCIAL] Ligando motores de busca web...", "#38bdf8");
+            
+            setTimeout(() => {
+                logNoTerminal("[AGENTE COMERCIAL] Identificadas 14 empresas com padrão de gargalo operacional.", "#38bdf8");
+                logNoTerminal("[AGENTE COMERCIAL] Filtrando leads de alta conversão através de scoring preditivo...", "#38bdf8");
+                
+                setTimeout(() => {
+                    logNoTerminal("[AGENTE COMERCIAL] Sucesso! Lead 'Tech-Solutions Global' selecionada para ataque comercial.", "#10b981");
+                    
+                    document.getElementById('status-comercial').className = "status-pill status-ready";
+                    document.getElementById('status-comercial').innerText = "Concluído";
+                    document.getElementById('status-analista').className = "status-pill status-running";
+                    document.getElementById('status-analista').innerText = "Processando";
+
+                    logNoTerminal("[AGENTE ANALISTA] Intercetando base de dados públicas e relatórios anexos da Tech-Solutions...", "#10b981");
+                    
+                    setTimeout(() => {
+                        logNoTerminal("[AGENTE ANALISTA] OCR concluído em 3 balancetes fiscais encontrados.", "#10b981");
+                        logNoTerminal("[AGENTE ANALISTA] Descoberto vazamento de margem de 18% no setor de estoque.", "#10b981");
+                        logNoTerminal("[AGENTE ANALISTA] Dados empacotados e enviados para o pipeline de geração de propostas.", "#10b981");
+
+                        setTimeout(() => {
+                            document.getElementById('status-analista').className = "status-pill status-ready";
+                            document.getElementById('status-analista').innerText = "Concluído";
+                            document.getElementById('status-copy').className = "status-pill status-running";
+                            document.getElementById('status-copy').innerText = "Processando";
+
+                            logNoTerminal("[AGENTE COPYWRITER] Recebendo briefings e métricas do Agente Analista...", "#a855f7");
+                            
+                            setTimeout(() => {
+                                logNoTerminal("[AGENTE COPYWRITER] Escrevendo e-mail personalizado hiper-focado na dor de 18% de quebra de estoque.", "#a855f7");
+                                logNoTerminal("[AGENTE COPYWRITER] Disparando gatilhos mentais corporativos de alta ancoragem de preço.", "#a855f7");
+                                logNoTerminal("[AGENTE COPYWRITER] [ENVIO] E-mail enviado com sucesso para: diretor@techsolutions.com.", "#10b981");
+
+                                setTimeout(() => {
+                                    document.getElementById('status-copy').className = "status-pill status-ready";
+                                    document.getElementById('status-copy').innerText = "Concluído";
+                                    btn.disabled = false;
+
+                                    logNoTerminal("<br><b>[WORKFLOW CONCLUÍDO COM SUCESSO COGNITIVO]</b>", "#fff");
+                                    
+                                    entregas.innerHTML = `
+                                        <li class="task-item">Prospecção 'Tech-Solutions' concluída <span>SUCESSO</span></li>
+                                        <li class="task-item">Auditoria de quebra de estoque anexada <span>EFETUADO</span></li>
+                                        <li class="task-item">E-mail de abordagem outbound disparado <span>ENVIADO</span></li>
+                                    `;
+
+                                    desligarMotorGrafico();
+                                }, 1200);
+                            }, 1500);
+                        }, 1200);
+                    }, 1800);
+                }, 1500);
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
