@@ -9,7 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Chart.js para os Gráficos Interativos -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -22,6 +21,7 @@
             --accent-blue: #38bdf8;
             --accent-green: #10b981;
             --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
             --text-main: #f3f4f6;
             --text-muted: #9ca3af;
             --border: rgba(255, 255, 255, 0.05);
@@ -60,10 +60,10 @@
         .header-dash p { color: var(--text-muted); font-weight: 300; }
 
         /* METRICAS */
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
-        .metric-card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.8rem; border-left: 4px solid var(--accent-blue); }
-        .metric-card span { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; }
-        .metric-card h2 { font-size: 2.2rem; margin: 0.5rem 0; }
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 3rem; }
+        .metric-card { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 1.5rem; border-left: 4px solid var(--accent-blue); }
+        .metric-card span { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .metric-card h2 { font-size: 1.8rem; font-weight: 700; }
 
         /* WORKSPACE */
         .workspace-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem; }
@@ -75,7 +75,7 @@
             border: 2px dashed rgba(56, 189, 248, 0.3);
             background: rgba(6, 8, 20, 0.5);
             border-radius: 12px;
-            padding: 4rem 2rem;
+            padding: 4.5rem 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
@@ -90,7 +90,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 1.5rem;
-            min-height: 220px;
+            min-height: 235px;
             font-size: 0.95rem;
             line-height: 1.6;
             overflow-y: auto;
@@ -114,14 +114,27 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* GRÁFICO */
-        .chart-panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
-        .chart-container { position: relative; width: 100%; height: 300px; }
+        /* GRÁFICO E ANÁLISES COGNITIVAS */
+        .chart-panel { background-color: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 2rem; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; }
+        @media (max-width: 992px) { .chart-panel { grid-template-columns: 1fr; } }
+        .chart-container { position: relative; width: 100%; height: 320px; }
+        
+        .technical-analysis {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .technical-analysis h4 { color: var(--accent-blue); font-size: 1.1rem; margin-bottom: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .technical-analysis p { font-size: 0.9rem; line-height: 1.6; color: #d1d5db; }
+        .insight-tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: 700; margin-top: 15px; text-transform: uppercase; align-self: flex-start; }
     </style>
 </head>
 <body>
 
-    <!-- MENU LATERAL CORPORATIVO -->
     <div class="sidebar">
         <div>
             <div class="logo">VÉRTICE<span> 2</span></div>
@@ -137,172 +150,3 @@
             <span>Vértice Consultoria</span>
         </div>
     </div>
-
-    <!-- CONTEÚDO DA APLICAÇÃO SAAS -->
-    <div class="main-content">
-        <header class="header-dash">
-            <h1>Vértice 2: DocAI Engine</h1>
-            <p>Extração automatizada de relatórios em PDF, planilhas CSV e imagens integrada diretamente à malha da IA.</p>
-        </header>
-
-        <section class="metrics-grid">
-            <div class="metric-card">
-                <span>Arquivos Minerados</span>
-                <h2 id="metric-docs">0</h2>
-            </div>
-            <div class="metric-card" style="border-left-color: var(--accent-green)">
-                <span>Motor Core DocAI</span>
-                <h2 style="color: var(--accent-green)">Local Ativo</h2>
-            </div>
-        </section>
-
-        <section class="workspace-grid">
-            <div class="panel">
-                <h3>Processador de Documentos</h3>
-                <!-- EVENTO CORRIGIDO: preventDefault remove o comportamento do navegador de apenas baixar o arquivo -->
-                <input type="file" id="file-selector" style="display: none;" accept=".pdf, .csv, .txt, .docx, .jpeg, .jpg, .png" onchange="event.preventDefault(); lerEProcessarArquivoReal(this.files[0])">
-                
-                <div class="dropzone" onclick="document.getElementById('file-selector').click()">
-                    <p>Arraste ou clique para selecionar o arquivo</p>
-                    <span>Formatos integrados: PDF, CSV, TXT, DOCX, JPEG e PNG</span>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h3>Interpretação Cognitiva Avançada</h3>
-                <div id="ai-idle-text" class="ai-output-box">
-                    <span style="color: var(--text-muted); font-style: italic;">Aguardando a inserção de novos documentos para iniciar o escaneamento neural...</span>
-                </div>
-                <div id="ai-loading" class="status-loading">
-                    <div class="spinner"></div>
-                    <p style="color: var(--accent-blue)">O algoritmo Vértice DocAI está minerando e estruturando os dados do arquivo...</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="chart-panel">
-            <h3>Visão Consolidada de Receita Extraída</h3>
-            <div class="chart-container">
-                <canvas id="meuGraficoIA"></canvas>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Inicialização Global do Gráfico
-        const ctx = document.getElementById('meuGraficoIA').getContext('2d');
-        window.graficoSaaS = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Mês 1', 'Mês 2', 'Mês 3', 'Mês 4'],
-                datasets: [{
-                    label: 'Valores Financeiros Identificados (R$)',
-                    data: [12000, 24000, 19000, 35000],
-                    borderColor: '#38bdf8',
-                    backgroundColor: 'rgba(56, 189, 248, 0.05)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.3
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { labels: { color: '#f3f4f6' } } },
-                scales: {
-                    y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#9ca3af' } },
-                    x: { ticks: { color: '#9ca3af' } }
-                }
-            }
-        });
-
-        // NOVO MOTOR: Lê os dados internos do arquivo e manipula o gráfico de verdade
-        function lerEProcessarArquivoReal(arquivo) {
-            if (!arquivo) return;
-
-            const idleText = document.getElementById('ai-idle-text');
-            const loading = document.getElementById('ai-loading');
-            const metricDocs = document.getElementById('metric-docs');
-
-            // Esconde texto inicial e mostra animação de leitura
-            idleText.style.display = 'none';
-            loading.style.display = 'flex';
-
-            const nomeArquivo = arquivo.name;
-            const extensao = nomeArquivo.split('.').pop().toUpperCase();
-            const tamanhoKB = Math.round(arquivo.size / 1024);
-
-            // Cria um leitor de arquivos do HTML5 para extrair os dados na memória do browser
-            const leitor = new FileReader();
-
-            leitor.onload = function(e) {
-                const conteudoBruto = e.target.result;
-                
-                // Análise algorítmica baseada no que está escrito dentro do arquivo
-                let valoresEncontrados = [];
-                let relatorioHTML = "";
-
-                if (extensao === "CSV" || extensao === "TXT") {
-                    // Tenta caçar números reais dentro do seu arquivo CSV/TXT usando Regex
-                    const numerosNoTexto = conteudoBruto.match(/\d[\d\.]*/g);
-                    if (numerosNoTexto && numerosNoTexto.length >= 4) {
-                        valoresEncontrados = numerosNoTexto.slice(0, 4).map(num => Math.abs(parseFloat(num)) || 20000);
-                    } else {
-                        // Valores de segurança baseados no tamanho do arquivo se não achar números
-                        valoresEncontrados = [tamanhoKB * 10, tamanhoKB * 15, tamanhoKB * 12, tamanhoKB * 22];
-                    }
-
-                    relatorioHTML = `
-                        <p style="color: var(--accent-purple); font-weight:bold; margin-bottom:10px;">✔ TEXTO ATIVO EXTRAÍDO DO ARQUIVO</p>
-                        <p style="margin-bottom: 8px;"><strong>Origem:</strong> ${nomeArquivo} (${tamanhoKB} KB)</p>
-                        <p><strong>Mapeamento Digital:</strong> O sistema realizou a varredura das linhas de código do documento. Os dados estruturados foram consolidados com sucesso.</p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>Leitura Interna:</strong> Processamento de strings concluído sem erros.</li>
-                            <li><strong>Ponto de Impacto:</strong> Gráfico gerado dinamicamente usando as variáveis nativas do arquivo.</li>
-                        </ul>
-                    `;
-                } else {
-                    // Para PDF, Word e Imagens, geramos uma semente matemática baseada no nome do arquivo
-                    // Isso garante que arquivos diferentes gerem formatos e movimentos de gráficos totalmente diferentes!
-                    let semente = nomeArquivo.length * tamanhoKB;
-                    valoresEncontrados = [
-                        Math.abs((semente % 30) * 1000) + 10000,
-                        Math.abs((semente % 50) * 1200) + 20000,
-                        Math.abs((semente % 40) * 1100) + 15000,
-                        Math.abs((semente % 70) * 1500) + 30000
-                    ];
-
-                    let corIdentidade = extensao === "PDF" ? "var(--accent-green)" : "var(--accent-blue)";
-
-                    relatorioHTML = `
-                        <p style="color: ${corIdentidade}; font-weight:bold; margin-bottom:10px;">✔ ESCANEAMENTO COGNITIVO COMPLETO</p>
-                        <p style="margin-bottom: 8px;"><strong>Documento Computado:</strong> ${nomeArquivo}</p>
-                        <p><strong>Análise Estrutural:</strong> Arquivo binário quebrado em matrizes lógicas. O algoritmo Vértice mapeou os metadados e calculou o balanço de projeção corporativa.</p>
-                        <ul style="margin-left: 20px; margin-top: 10px;">
-                            <li><strong>Tipo de Mídia:</strong> Formato estrutural ${extensao}.</li>
-                            <li><strong>Volume Estimado:</strong> Projeções financeiras calculadas com base na densidade do arquivo (${tamanhoKB} KB).</li>
-                        </ul>
-                    `;
-                }
-
-                // Espera 1.5 segundos para simular a IA e joga as informações na tela
-                setTimeout(() => {
-                    loading.style.display = 'none';
-                    idleText.style.display = 'block';
-                    idleText.innerHTML = relatorioHTML;
-
-                    // Incrementa o contador de arquivos processados
-                    metricDocs.innerText = parseInt(metricDocs.innerText) + 1;
-
-                    // MOVIMENTAÇÃO REAL DO GRÁFICO: Injeta os novos arrays de dados e força a re-renderização na tela
-                    window.graficoSaaS.data.datasets[0].data = valoresEncontrados;
-                    window.graficoSaaS.update();
-                }, 1500);
-            };
-
-            // Dispara a leitura em segundo plano
-            leitor.readAsText(arquivo);
-        }
-    </script>
-</body>
-</html>
